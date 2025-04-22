@@ -1,0 +1,36 @@
+services:
+  api:
+    build: .
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.6 # Usando a imagem do MariaDB
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ${DATABASE} # Banco de dados que será criado
+      MYSQL_USER: ${DATABASE_USERNAME} # Usuário do banco de dados
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD} # Senha do banco de dados
+    volumes:
+      - mariadb_data:/var/lib/mysql # Persistindo os dados do banco
+    ports:
+      - '3306:3306' # Mapeando a porta do MariaDB
+    command: --max-allowed-packet=64M --wait-timeout=28800 --interactive-timeout=28800
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: ${DATABASE_HOST}
+      PMA_USER: ${DATABASE_USERNAME}
+      PMA_PASSWORD: ${DATABASE_PASSWORD}
+
+volumes:
+  mariadb_data:
