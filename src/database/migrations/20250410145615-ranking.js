@@ -30,7 +30,7 @@ module.exports = {
       },
       score: {
         type: Sequelize.INTEGER,
-        defaultValue: '',
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,

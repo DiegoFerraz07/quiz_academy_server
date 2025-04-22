@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 require('dotenv').config();
 
 module.exports = {
-  dialect: process.env.DATABASE_DIALECT,
+  dialect: 'mariadb', // mariaDB
   host: process.env.DATABASE_HOST,
   port: process.env.DATABASE_PORT,
   username: process.env.DATABASE_USERNAME,
@@ -15,7 +16,7 @@ module.exports = {
     updatedAt: 'updated_at',
   },
   dialectOptions: {
-    timezone: process.env.APP_TIMEZONE,
+    timezone: 'America/Sao_Paulo',
   },
-  timezone: process.env.APP_TIMEZONE,
+  timezone: 'America/Sao_Paulo',
 };

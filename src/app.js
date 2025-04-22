@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
-import routes from '../src/routes/index';
 
 const app = express();
 // extended: true -> permite objetos e arrays complexos no corpo da requisição

@@ -24,6 +24,8 @@ module.exports = {
       },
       is_correct: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       created_at: {
         type: Sequelize.DATE,

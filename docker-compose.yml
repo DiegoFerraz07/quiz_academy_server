@@ -28,7 +28,7 @@ services:
     ports:
       - '8080:80'
     environment:
-      PMA_HOST: ${DATABASE_HOST}
+      PMA_HOST: db
       PMA_USER: ${DATABASE_USERNAME}
       PMA_PASSWORD: ${DATABASE_PASSWORD}
 
