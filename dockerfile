@@ -16,6 +16,7 @@ COPY . .
 # Expondo a porta onde a aplicação vai rodar
 EXPOSE 3001
 
+
 # Comando para rodar a aplicação
 CMD ["npm", "start"]
 

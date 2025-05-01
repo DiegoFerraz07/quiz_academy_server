@@ -49,6 +49,7 @@ export default class Teachers extends Model {
       },
       {
         sequelize,
+        tableName: 'teachers',
       },
     );
     return this;

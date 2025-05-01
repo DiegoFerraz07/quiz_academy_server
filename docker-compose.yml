@@ -18,6 +18,7 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD} # Senha do banco de dados
     volumes:
       - mariadb_data:/var/lib/mysql # Persistindo os dados do banco
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Inicialização do banco de dados
     ports:
       - '3306:3306' # Mapeando a porta do MariaDB
     command: --max-allowed-packet=64M --wait-timeout=28800 --interactive-timeout=28800
@@ -28,7 +29,7 @@ services:
     ports:
       - '8080:80'
     environment:
-      PMA_HOST: db
+      PMA_HOST: ${DATABASE_HOST}
       PMA_USER: ${DATABASE_USERNAME}
       PMA_PASSWORD: ${DATABASE_PASSWORD}
 
