@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      teacher_id: {
+      teachers_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

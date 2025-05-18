@@ -7,7 +7,7 @@ const router = new Router();
 
 router.get('/', teacherController.index);
 router.post('/', teacherController.store);
-router.put('/:id', loginRequired, teacherController.update);
-router.delete('/:id', loginRequired, teacherController.delete);
+router.put('/', loginRequired, teacherController.update);
+router.delete('/', loginRequired, teacherController.delete);
 
 export default router;

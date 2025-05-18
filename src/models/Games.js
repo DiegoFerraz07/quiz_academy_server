@@ -24,6 +24,10 @@ export default class Games extends Model {
             },
           },
         },
+        is_public: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
       },
       {
         sequelize,
@@ -33,7 +37,10 @@ export default class Games extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Teachers, { foreignKey: 'teachers_id' });
+    this.belongsTo(models.Teachers, {
+      foreignKey: 'teachers_id',
+      as: 'teachers',
+    });
     this.hasMany(models.Questions, { foreignKey: 'games_id' });
     this.hasMany(models.GameAccess, { foreignKey: 'games_id' });
     this.hasMany(models.Ranking, { foreignKey: 'games_id' });

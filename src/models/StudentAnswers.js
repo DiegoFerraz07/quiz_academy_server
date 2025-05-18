@@ -18,8 +18,14 @@ export default class StudentAnswers extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Students, { foreignKey: 'students_id' });
-    this.belongsTo(models.Questions, { foreignKey: 'questions_id' });
-    this.belongsTo(models.Choices, { foreignKey: 'choices_id' });
+    this.belongsTo(models.Students, {
+      foreignKey: 'students_id',
+      as: 'students',
+    });
+    this.belongsTo(models.Questions, {
+      foreignKey: 'questions_id',
+      as: 'questions',
+    });
+    this.belongsTo(models.Choices, { foreignKey: 'choices_id', as: 'choices' });
   }
 }

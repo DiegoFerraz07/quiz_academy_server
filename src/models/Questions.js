@@ -23,7 +23,7 @@ export default class Questions extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Games, { foreignKey: 'games_id' });
+    this.belongsTo(models.Games, { foreignKey: 'games_id', as: 'games' });
     this.hasMany(models.Choices, { foreignKey: 'questions_id' });
   }
 }

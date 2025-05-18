@@ -12,13 +12,17 @@ export default class Ranking extends Model {
       },
       {
         sequelize,
+        tableName: 'ranking',
       },
     );
     return this;
   }
 
   static associate(models) {
-    this.belongsTo(models.Students, { foreignKey: 'students_id' });
-    this.belongsTo(models.Games, { foreignKey: 'games_id' });
+    this.belongsTo(models.Students, {
+      foreignKey: 'students_id',
+      as: 'students',
+    });
+    this.belongsTo(models.Games, { foreignKey: 'games_id', as: 'games' });
   }
 }

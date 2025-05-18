@@ -7,7 +7,7 @@ class TeacherController {
       return res.json(teacher);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Erro ao buscar professores' });
+      return res.status(401).json({ error: 'Erro ao buscar professores' });
     }
   }
 
@@ -18,7 +18,7 @@ class TeacherController {
       console.log(newTeacher);
       return res.json(newTeacher);
     } catch (err) {
-      return res.status(400).json({
+      return res.status(401).json({
         errors: err.errors.map(error => error.message),
       });
     }
@@ -28,7 +28,7 @@ class TeacherController {
       const teacher = await Teachers.findByPk(req.userId);
 
       if (!teacher) {
-        return res.status(400).json({
+        return res.status(401).json({
           errors: ['Professor não encontrado'],
         });
       }
@@ -36,7 +36,7 @@ class TeacherController {
       const teacherUpdate = await teacher.update(req.body);
       return res.json(teacherUpdate);
     } catch (error) {
-      return res.status(400).json({
+      return res.status(401).json({
         errors: error.errors.map(err => err.message),
       });
     }
@@ -47,7 +47,7 @@ class TeacherController {
       const teacher = await Teachers.findByPk(req.userId);
 
       if (!teacher) {
-        return res.status(400).json({
+        return res.status(401).json({
           errors: ['Professor não encontrado'],
         });
       }
@@ -57,7 +57,7 @@ class TeacherController {
         msg: 'Professor deletado com sucesso!',
       });
     } catch (err) {
-      return res.status(400).json({
+      return res.status(401).json({
         errors: err.errors.map(err => err.message),
       });
     }

@@ -9,7 +9,7 @@ export default class Choices extends Model {
           defaultValue: '',
           validate: {
             len: {
-              args: [10, 255],
+              args: [3, 255],
               msg: 'A Escolha da questão precisa ter entre 10 a 255 caracters',
             },
           },
@@ -28,7 +28,10 @@ export default class Choices extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Questions, { foreignKey: 'questions_id' });
+    this.belongsTo(models.Questions, {
+      foreignKey: 'questions_id',
+      as: 'questions',
+    });
     this.hasMany(models.StudentAnswers, { foreignKey: 'choices_id' });
   }
 }
