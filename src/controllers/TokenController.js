@@ -43,7 +43,43 @@ class TokenController {
       expiresIn: process.env.TOKEN_EXPIRATION,
     });
 
-    return res.json({ token, user: { nome: user.name, id, email, role } });
+    return res.json({
+      token,
+      user: {
+        name: user.name,
+        lastName: user.lastName,
+        id,
+        email,
+        role,
+      },
+    });
+  }
+  async show(req, res) {
+    let user;
+    console.log(req.userId);
+    if (req.userRole === 'Professor') {
+      user = await Teachers.findOne({
+        where: { id: req.userId, email: req.userEmail },
+      });
+    } else if (req.userRole === 'Estudante') {
+      user = await Students.findOne({
+        where: { id: req.userId, email: req.userEmail },
+      });
+    }
+
+    if (!user) {
+      return res.status(401).json({
+        errors: ['Usuario não encontrado'],
+      });
+    }
+
+    return res.json({
+      id: user.id,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      role: req.userRole,
+    });
   }
 }
 

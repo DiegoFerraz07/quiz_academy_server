@@ -33,7 +33,12 @@ class TeacherController {
         });
       }
 
-      const teacherUpdate = await teacher.update(req.body);
+      const updateData = { ...req.body };
+
+      if (!updateData.password || updateData.password.trim() === '') {
+        delete updateData.password;
+      }
+      const teacherUpdate = await teacher.update(updateData);
       return res.json(teacherUpdate);
     } catch (error) {
       return res.status(401).json({

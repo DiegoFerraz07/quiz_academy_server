@@ -33,7 +33,13 @@ class StudentController {
         });
       }
 
-      const studentUpdate = await student.update(req.body);
+      const updateData = { ...req.body };
+
+      if (!updateData.password || updateData.password.trim() === '') {
+        delete updateData.password;
+      }
+
+      const studentUpdate = await student.update(updateData);
       return res.json(studentUpdate);
     } catch (error) {
       return res.status(400).json({
