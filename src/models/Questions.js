@@ -9,7 +9,7 @@ export default class Questions extends Model {
           defaultValue: '',
           validate: {
             len: {
-              args: [10, 255],
+              args: [3, 255],
               msg: 'O enunciado da questão precisa ter entre 10 a 255 caracters',
             },
           },

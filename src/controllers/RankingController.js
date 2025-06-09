@@ -56,13 +56,13 @@ class RankingController {
       const { gamesId, studentId } = req.body;
 
       if (!gamesId) {
-        return res.status(401).json({
+        return res.status(400).json({
           errors: ['id do jogo não encontrado'],
         });
       }
 
       if (!studentId) {
-        return res.status(401).json({
+        return res.status(400).json({
           errors: ['id do estudante não encontrado'],
         });
       }

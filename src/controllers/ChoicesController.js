@@ -1,4 +1,5 @@
 import Choices from '../models/Choices';
+import Questions from '../models/Questions';
 
 class ChoicesController {
   async index(req, res) {
@@ -56,6 +57,7 @@ class ChoicesController {
       }
 
       const { questionsId } = req.params;
+      const { choices } = req.body;
 
       if (!questionsId) {
         return res.status(400).json({
@@ -63,30 +65,48 @@ class ChoicesController {
         });
       }
 
-      const choicesCount = await Choices.count({
-        where: { questions_id: questionsId },
-      });
-
-      if (choicesCount >= 5) {
+      if (!Array.isArray(choices) || choices.length !== 5) {
         return res.status(400).json({
-          errors: ['Você só pode criar até 5 escolhas para cada questão'],
+          errors: ['Você deve enviar exatamente 5 escolhas'],
         });
       }
 
-      //todo: verificar se tem 5 e se tem pelo menos uma correta
+      const existingChoicesCount = await Choices.count({
+        where: { questions_id: questionsId },
+      });
 
-      const choicesData = {
-        ...req.body,
-        questions_id: questionsId,
-      };
+      if (existingChoicesCount + choices.length !== 5) {
+        return res.status(400).json({
+          errors: ['Você deve ter exatamente 5 escolhas por questão.'],
+        });
+      }
 
-      const newChoice = await Choices.create(choicesData);
+      const correctChoicesCount = choices.filter(
+        c => c.is_correct === true,
+      ).length;
 
-      return res.json(newChoice);
+      if (correctChoicesCount !== 1) {
+        return res.status(400).json({
+          errors: ['Deve haver exatamente UMA escolha correta'],
+        });
+      }
+
+      const newChoices = await Promise.all(
+        choices.map(choice => {
+          return Choices.create({
+            ...choice,
+            questions_id: questionsId,
+          });
+        }),
+      );
+
+      return res.status(201).json(newChoices);
     } catch (err) {
       console.error(err);
-      return res.status(400).json({
-        errors: err.errors.map(erro => erro.message),
+      return res.status(500).json({
+        errors: err.errors
+          ? err.errors.map(e => e.message)
+          : ['Erro interno no servidor'],
       });
     }
   }
@@ -95,33 +115,60 @@ class ChoicesController {
     try {
       if (req.userRole !== 'Professor') {
         return res.status(403).json({
-          errors: ['Somente professores podem atualizar questões'],
+          errors: ['Somente professores podem criar questões'],
         });
       }
 
-      const { id } = req.params;
+      const { questionsId } = req.params;
+      const { choices } = req.body;
 
-      if (!id) {
+      if (!questionsId) {
         return res.status(400).json({
-          errors: ['ID não encontrado'],
+          errors: ['ID da questão não encontrado'],
         });
       }
 
-      const choice = await Choices.findByPk(id);
-
-      if (!choice) {
-        return res.status(404).json({
-          errors: ['Escolha não encontrada'],
+      if (!Array.isArray(choices) || choices.length !== 5) {
+        return res.status(400).json({
+          errors: ['Você deve enviar exatamente 5 escolhas'],
         });
       }
 
-      const updatedChoice = await choice.update(req.body);
+      const correctChoicesCount = choices.filter(
+        c => c.is_correct === true,
+      ).length;
 
-      return res.json(updatedChoice);
+      if (correctChoicesCount !== 1) {
+        return res.status(400).json({
+          errors: ['Deve haver exatamente UMA escolha correta'],
+        });
+      }
+
+      // Atualiza cada choice — **exige informar where no update!**
+      await Promise.all(
+        choices.map(choice => {
+          return Choices.update(
+            {
+              choice: choice.choice,
+              is_correct: choice.is_correct,
+              question_id: questionsId, // corrigido para singular question_id
+            },
+            {
+              where: { id: choice.id, questions_id: questionsId },
+            },
+          );
+        }),
+      );
+
+      return res
+        .status(200)
+        .json({ message: 'Choices atualizadas com sucesso' });
     } catch (err) {
-      console.error('Erro ao atualizar escolha:', err.message, err.stack);
+      console.error(err);
       return res.status(500).json({
-        err: 'Erro ao atualizar a escolha',
+        errors: err.errors
+          ? err.errors.map(e => e.message)
+          : ['Erro interno no servidor'],
       });
     }
   }

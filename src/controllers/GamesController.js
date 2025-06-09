@@ -16,6 +16,44 @@ class GamesController {
     }
   }
 
+  async show(req, res) {
+    try {
+      const { gameId } = req.params;
+      const game = await Games.findByPk(gameId, {
+        include: [
+          { association: 'teachers', attributes: ['id', 'name', 'email'] },
+        ],
+      });
+      console.log('games:', game);
+      return res.json(game);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ err: 'Erro ao buscar os  jogos' });
+    }
+  }
+
+  async indexTeacher(req, res) {
+    try {
+      if (req.userRole !== 'Professor') {
+        return res.status(403).json({
+          errors: ['Somente professores podem acessar seus próprios jogos'],
+        });
+      }
+      const { teacherId } = req.params;
+      const teacherGames = await Games.findAll({
+        where: { teachers_id: teacherId },
+        include: [
+          { association: 'teachers', attributes: ['id', 'name', 'email'] },
+        ],
+      });
+      console.log('games:', teacherGames);
+      return res.json(teacherGames);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ err: 'Erro ao buscar os  jogos' });
+    }
+  }
+
   async store(req, res) {
     try {
       if (req.userRole !== 'Professor') {
@@ -45,14 +83,14 @@ class GamesController {
         });
       }
 
-      const { id } = await req.params;
+      const { gameId } = req.params;
 
-      if (!id) {
+      if (!gameId) {
         return res.status(404).json({
-          errors: ['id não encontrado'],
+          errors: ['Id não encontrado'],
         });
       }
-      const games = await Games.findByPk(id);
+      const games = await Games.findByPk(gameId);
 
       if (!games) {
         return res.status(404).json({
@@ -86,7 +124,7 @@ class GamesController {
         });
       }
 
-      const { id } = await req.params;
+      const { id } = req.params;
 
       if (!id) {
         return res.status(401).json({

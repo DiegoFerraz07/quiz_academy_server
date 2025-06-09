@@ -11,6 +11,17 @@ class StudentController {
     }
   }
 
+  async show(req, res) {
+    try {
+      const { studentsId } = req.params;
+      const students = await Students.findByPk(studentsId);
+      return res.json(students);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ err: 'Erro ao buscar os  jogos' });
+    }
+  }
+
   async store(req, res) {
     try {
       console.log(req.body);

@@ -50,7 +50,7 @@ class QuestionsController {
         });
       }
 
-      const { gamesId } = await req.params;
+      const { gamesId } = req.params;
 
       if (!gamesId) {
         return res.status(401).json({
@@ -90,19 +90,19 @@ class QuestionsController {
         });
       }
 
-      const { id } = req.params;
+      const { questionsIds } = req.params;
 
-      if (!id) {
+      if (!questionsIds) {
         return res.status(401).json({
-          errors: ['id não encontrado'],
+          errors: ['Id não encontrado'],
         });
       }
 
-      const questions = await Questions.findByPk(id);
+      const questions = await Questions.findByPk(questionsIds);
 
       if (!questions) {
         return res.status(401).json({
-          errors: ['Jogo não existe'],
+          errors: ['Quetão não existe'],
         });
       }
 
